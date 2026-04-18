@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexMart — Modern Shopping Experience</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>">
+</head>
+<body>
+
+  <!-- ============================================================
+       NAVBAR
+       ============================================================ -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <!-- Logo -->
+      <a href="#" class="nav-logo" onclick="event.preventDefault(); navigate('home')">Nex<span>Mart</span></a>
+
+      <!-- Search -->
+      <div class="nav-search">
+        <input type="text" id="mainSearch" class="search-input-all" placeholder="Search products, brands, categories…">
+        <button class="nav-search-btn" id="navSearchBtn" aria-label="Search">🔍</button>
+      </div>
+
+      <!-- Actions -->
+      <div class="nav-actions">
+        <button class="nav-btn" data-page="products" onclick="navigate('products')">
+          🏪 <span class="nav-label">Shop</span>
+        </button>
+        <button class="nav-btn wish-nav" onclick="navigate('products')">
+          ♡
+          <span class="wish-badge">0</span>
+        </button>
+        <button class="nav-btn cart-nav" data-page="cart" onclick="navigate('cart')">
+          🛒 <span class="nav-label">Cart</span>
+          <span class="cart-badge">0</span>
+        </button>
+        <button class="nav-btn" data-page="login" onclick="navigate('login')">
+          👤 <span class="nav-label">Sign In</span>
+        </button>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       TOAST CONTAINER
+       ============================================================ -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- ============================================================
+       PAYMENT PROCESSING OVERLAY
+       ============================================================ -->
+  <div class="payment-processing" id="paymentProcessing">
+    <div class="processing-ring"></div>
+    <div class="processing-text">Processing Payment…</div>
+    <div class="processing-sub">Please don't close this window</div>
+  </div>
+
+  <!-- ============================================================
+       PAGE: HOME
+       ============================================================ -->
+  <div id="page-home" class="page">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-bg">
+        <div class="hero-orb hero-orb-1"></div>
+        <div class="hero-orb hero-orb-2"></div>
+        <div class="hero-orb hero-orb-3"></div>
+      </div>
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-content">
+            <div class="hero-eyebrow">New Season 2025</div>
+            <h1 class="hero-title">
+              <span class="line">Discover The</span>
+              <span class="line accent">Future</span>
+              <span class="line">of <span class="stroke">Shopping</span></span>
+            </h1>
+            <p class="hero-subtitle">Premium products, unbeatable prices, lightning-fast delivery. Your ultimate shopping destination.</p>
+            <div class="hero-cta">
+              <button class="btn-primary" onclick="navigate('products')">Shop Now →</button>
+              <button class="btn-secondary" onclick="navigate('products')">View Deals</button>
+            </div>
+            <div class="hero-stats">
+              <div class="hero-stat"><div class="num">50K+</div><div class="label">Products</div></div>
+              <div class="hero-stat"><div class="num">2M+</div><div class="label">Happy Customers</div></div>
+              <div class="hero-stat"><div class="num">4.9★</div><div class="label">Average Rating</div></div>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <div class="hero-cards-stack">
+              <div class="hero-card-item hero-card-side-1"></div>
+              <div class="hero-card-item hero-card-side-2"></div>
+              <div class="hero-card-item hero-card-main"></div>
+              <div class="hero-float-badge badge-1">
+                <div class="badge-label">Today's Savings</div>
+                <div class="badge-val">Up to 40% OFF</div>
+              </div>
+              <div class="hero-float-badge badge-2">
+                <div class="badge-label">Free Shipping</div>
+                <div class="badge-val">Over $35</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="section" style="padding-top: 0">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Shop by <span>Category</span></div>
+            <div class="section-subtitle">Find what you're looking for</div>
+          </div>
+          <button class="view-all" onclick="navigate('products')">View All →</button>
+        </div>
+        <div class="categories-grid" id="categoriesGrid"></div>
+      </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Featured <span>Products</span></div>
+            <div class="section-subtitle">Handpicked for you</div>
+          </div>
+          <button class="view-all" onclick="navigate('products')">View All →</button>
+        </div>
+        <div id="featuredGrid"></div>
+      </div>
+    </section>
+
+    <!-- Promo Banner -->
+    <div class="container">
+      <div class="promo-banner">
+        <div class="promo-content">
+          <div class="promo-eyebrow">Limited Time Offer</div>
+          <div class="promo-title">Summer Sale — Up to 40% Off</div>
+          <div class="promo-sub">On Electronics, Fashion & More. Free shipping included.</div>
+        </div>
+        <button class="promo-btn" onclick="navigate('products')">Shop Sale →</button>
+      </div>
+    </div>
+
+    <!-- Deals -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Today's <span>Deals</span></div>
+            <div class="section-subtitle">Don't miss these savings</div>
+          </div>
+          <button class="view-all" onclick="navigate('products')">All Deals →</button>
+        </div>
+        <div id="dealsGrid"></div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="logo">Nex<span>Mart</span></div>
+            <p>Your modern shopping destination for premium products at unbeatable prices. Shop smarter, live better.</p>
+            <div class="footer-social">
+              <a href="#" class="social-link" onclick="event.preventDefault(); showToast('info', 'Social', 'Opening social media...')">𝕏</a>
+              <a href="#" class="social-link" onclick="event.preventDefault(); showToast('info', 'Social', 'Opening social media...')">f</a>
+              <a href="#" class="social-link" onclick="event.preventDefault(); showToast('info', 'Social', 'Opening social media...')">in</a>
+              <a href="#" class="social-link" onclick="event.preventDefault(); showToast('info', 'Social', 'Opening social media...')">▶</a>
+            </div>
+          </div>
+          <div>
+            <div class="footer-col-title">Shop</div>
+            <a class="footer-link" href="#" onclick="event.preventDefault(); navigate('products')">All Products</a>
+            <a class="footer-link" href="#" onclick="event.preventDefault(); filterByCategory('Electronics')">Electronics</a>
+            <a class="footer-link" href="#" onclick="event.preventDefault(); filterByCategory('Fashion')">Fashion</a>
+            <a class="footer-link" href="#" onclick="event.preventDefault(); filterByCategory('Home')">Home & Living</a>
+            <a class="footer-link" href="#" onclick="event.preventDefault(); filterByCategory('Photography')">Photography</a>
+          </div>
+          <div>
+            <div class="footer-col-title">Support</div>
+            <a class="footer-link" href="#" onclick="event.preventDefault(); navigate('static', 'help')">Help Center</a>
+            <a class="footer-link" href="#" onclick="event.preventDefault(); navigate('static', 'track')">Track Order</a>
+            <a class="footer-link" href="#" onclick="event.preventDefault(); navigate('static', 'returns')">Returns</a>
+            <a class="footer-link" href="#" onclick="event.preventDefault(); navigate('static', 'shipping')">Shipping Info</a>
+            <a class="footer-link" href="#" onclick="event.preventDefault(); navigate('static', 'contact')">Contact Us</a>
+          </div>
+          <div>
+            <div class="footer-col-title">Company</div>
+            <a class="footer-link" href="#" onclick="event.preventDefault(); navigate('static', 'about')">About Us</a>
+            <a class="footer-link" href="#" onclick="event.preventDefault(); navigate('static', 'careers')">Careers</a>
+            <a class="footer-link" href="#" onclick="event.preventDefault(); navigate('static', 'press')">Press</a>
+            <a class="footer-link" href="#" onclick="event.preventDefault(); navigate('static', 'privacy')">Privacy Policy</a>
+            <a class="footer-link" href="#" onclick="event.preventDefault(); navigate('static', 'terms')">Terms of Service</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <div class="footer-copy">© 2025 NexMart. All rights reserved.</div>
+          <div class="footer-badges">
+            <span class="footer-badge">🔒 SSL Secured</span>
+            <span class="footer-badge">💳 Visa · MC · PayPal</span>
+            <span class="footer-badge">📦 Free Returns</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ============================================================
+       PAGE: PRODUCTS
+       ============================================================ -->
+  <div id="page-products" class="page">
+    <div class="products-page-header">
+      <div class="container">
+        <h1 class="products-page-title">All Products</h1>
+        <p class="products-page-subtitle">Discover our curated collection</p>
+      </div>
+    </div>
+    <div class="container">
+      <div class="products-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <div class="sidebar-block">
+            <div class="sidebar-title">Categories <span class="sidebar-clear" onclick="currentFilters.category=[];renderProducts()">Clear</span></div>
+            <div id="sidebarCategories"></div>
+          </div>
+          <div class="sidebar-block">
+            <div class="sidebar-title">Brands</div>
+            <div id="sidebarBrands"></div>
+          </div>
+          <div class="sidebar-block">
+            <div class="sidebar-title">Price Range</div>
+            <div class="price-range">
+              <input type="range" class="price-slider" id="priceSlider" min="0" max="2000" value="2000">
+              <div class="price-labels"><span>$0</span><span id="priceMax">$2000</span></div>
+            </div>
+          </div>
+          <div class="sidebar-block">
+            <div class="sidebar-title">Rating</div>
+            <div id="sidebarRatings"></div>
+          </div>
+        </aside>
+
+        <!-- Main content -->
+        <div>
+          <div class="products-toolbar">
+            <div id="productsCount" class="products-count">Loading…</div>
+            <div class="toolbar-right">
+              <select class="sort-select" id="sortSelect">
+                <option value="featured">Featured</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="rating">Top Rated</option>
+                <option value="newest">Newest</option>
+              </select>
+              <div class="view-toggle">
+                <button class="view-btn active" data-view="grid" title="Grid view" onclick="setView('grid')">⊞</button>
+                <button class="view-btn" data-view="list" title="List view" onclick="setView('list')">☰</button>
+              </div>
+            </div>
+          </div>
+          <div id="activeFilters" class="active-filters"></div>
+          <div id="productsGrid" class="products-grid"></div>
+          <div id="pagination" class="pagination"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       PAGE: PRODUCT DETAIL
+       ============================================================ -->
+  <div id="page-detail" class="page"></div>
+
+  <!-- ============================================================
+       PAGE: CART
+       ============================================================ -->
+  <div id="page-cart" class="page">
+    <div style="padding-top: var(--nav-h)">
+      <div class="container">
+        <h1 class="cart-page-title" id="cartTitle">Your Cart</h1>
+        <div class="cart-layout">
+          <div id="cartItems"></div>
+          <div id="cartSummary" class="cart-summary">
+            <div class="summary-title">Order Summary</div>
+            <div class="coupon-row">
+              <input type="text" class="coupon-input" placeholder="Promo code">
+              <button class="coupon-btn" onclick="showToast('info', '🏷️ Code Applied!', 'SAVE10 — 10% discount applied')">Apply</button>
+            </div>
+            <div class="summary-row"><span>Subtotal</span><span class="summary-subtotal">$0.00</span></div>
+            <div class="summary-row"><span>Shipping</span><span class="summary-shipping">$0.00</span></div>
+            <div class="summary-row"><span>Tax (8%)</span><span class="summary-tax">$0.00</span></div>
+            <hr class="summary-divider">
+            <div class="summary-total"><span>Total</span><span class="total-price">$0.00</span></div>
+            <button class="checkout-btn" onclick="navigate('checkout')">Checkout →</button>
+            <button class="continue-btn" onclick="navigate('products')">← Continue Shopping</button>
+            <div class="secure-badges">
+              <span class="secure-badge">🔒 SSL Secure</span>
+              <span class="secure-badge">💳 Encrypted</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       PAGE: LOGIN / REGISTER
+       ============================================================ -->
+  <div id="page-login" class="page">
+    <div class="auth-page">
+      <div class="auth-visual">
+        <div class="auth-visual-inner">
+          <div>
+            <div class="auth-visual-title">Shop Smarter,<br>Live <span>Better</span></div>
+            <p class="auth-visual-p" style="margin-top:14px">Join millions of shoppers who trust NexMart for the best deals and fastest delivery.</p>
+          </div>
+          <div class="auth-visual-cards">
+            <div class="auth-visual-card">
+              <span class="auth-visual-card-icon">🚚</span>
+              <div><div class="auth-visual-card-title">Free Fast Delivery</div><div class="auth-visual-card-text">On orders over $35</div></div>
+            </div>
+            <div class="auth-visual-card">
+              <span class="auth-visual-card-icon">🔄</span>
+              <div><div class="auth-visual-card-title">30-Day Returns</div><div class="auth-visual-card-text">Hassle-free returns</div></div>
+            </div>
+            <div class="auth-visual-card">
+              <span class="auth-visual-card-icon">🛡️</span>
+              <div><div class="auth-visual-card-title">Buyer Protection</div><div class="auth-visual-card-text">100% secure payments</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="auth-form-side">
+        <div class="auth-box">
+          <div class="auth-logo">Nex<span>Mart</span></div>
+          <div class="form-tabs">
+            <div class="form-tab active" data-tab="login">Sign In</div>
+            <div class="form-tab" data-tab="register">Create Account</div>
+          </div>
+          <!-- Login Form -->
+          <form id="loginForm">
+            <div class="auth-title">Welcome Back</div>
+            <p class="auth-sub">Don't have an account? <a href="#" onclick="event.preventDefault(); switchAuthTab('register')">Sign up</a></p>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" placeholder="you@example.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-input" placeholder="Enter your password" required>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;font-size:0.82rem">
+              <label style="display:flex;align-items:center;gap:6px;color:var(--text-secondary);cursor:pointer">
+                <input type="checkbox" style="accent-color:var(--accent)"> Remember me
+              </label>
+              <a href="#" style="color:var(--accent)" onclick="event.preventDefault(); showToast('info', 'Reset Password', 'A reset link has been sent if the email exists.')">Forgot password?</a>
+            </div>
+            <button type="submit" class="submit-btn">Sign In →</button>
+            <div class="divider-or">or continue with</div>
+            <div class="social-btns">
+              <button type="button" class="social-btn" onclick="showToast('info', 'Coming Soon', 'Social login is under development.')">🌐 Google</button>
+              <button type="button" class="social-btn" onclick="showToast('info', 'Coming Soon', 'Social login is under development.')">🍎 Apple</button>
+            </div>
+          </form>
+          <!-- Register Form -->
+          <form id="registerForm" style="display:none">
+            <div class="auth-title">Create Account</div>
+            <p class="auth-sub">Already have an account? <a href="#" onclick="event.preventDefault(); switchAuthTab('login')">Sign in</a></p>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">First Name</label>
+                <input type="text" class="form-input" placeholder="John" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Last Name</label>
+                <input type="text" class="form-input" placeholder="Doe" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" placeholder="you@example.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-input" placeholder="Min. 8 characters" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:400;color:var(--text-secondary)">
+                <input type="checkbox" required style="accent-color:var(--accent)">
+                I agree to the <a href="#" style="color:var(--accent)" onclick="event.preventDefault(); showToast('info', 'Terms', 'Terms and conditions apply.')">Terms</a> and <a href="#" style="color:var(--accent)" onclick="event.preventDefault(); showToast('info', 'Privacy', 'Privacy policy applies.')">Privacy Policy</a>
+              </label>
+            </div>
+            <button type="submit" class="submit-btn">Create Account →</button>
+            <div class="divider-or">or continue with</div>
+            <div class="social-btns">
+              <button type="button" class="social-btn" onclick="showToast('info', 'Coming Soon', 'Social login is under development.')">🌐 Google</button>
+              <button type="button" class="social-btn" onclick="showToast('info', 'Coming Soon', 'Social login is under development.')">🍎 Apple</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       PAGE: CHECKOUT
+       ============================================================ -->
+  <div id="page-checkout" class="page">
+    <div style="padding-top: var(--nav-h)">
+      <div class="container">
+
+        <!-- Payment Success -->
+        <div class="payment-success" id="paymentSuccess">
+          <div class="success-icon">✅</div>
+          <div class="success-title">Order Confirmed!</div>
+          <p class="success-sub">Your payment was successful. We'll send you a confirmation email shortly.</p>
+          <p class="order-num">Order Number: <span id="orderNumber"></span></p>
+          <button class="btn-primary" id="successContinue" style="margin-top:24px">Continue Shopping →</button>
+        </div>
+
+        <div id="checkoutMain">
+          <h1 class="checkout-title">Checkout</h1>
+          <div class="checkout-steps">
+            <div class="step active" data-step="1"><div class="step-num">1</div> Shipping</div>
+            <div class="step-arrow">›</div>
+            <div class="step" data-step="2"><div class="step-num">2</div> Payment</div>
+            <div class="step-arrow">›</div>
+            <div class="step" data-step="3"><div class="step-num">3</div> Review</div>
+          </div>
+
+          <div class="checkout-layout">
+            <div>
+              <!-- Shipping -->
+              <div class="checkout-section" data-step="1">
+                <div class="checkout-section-title"><span></span> Shipping Information</div>
+                <div class="form-row">
+                  <div class="form-group"><label class="form-label">First Name</label><input type="text" class="form-input" placeholder="John"></div>
+                  <div class="form-group"><label class="form-label">Last Name</label><input type="text" class="form-input" placeholder="Doe"></div>
+                </div>
+                <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" placeholder="you@example.com"></div>
+                <div class="form-group"><label class="form-label">Address</label><input type="text" class="form-input" placeholder="123 Main Street"></div>
+                <div class="form-row">
+                  <div class="form-group"><label class="form-label">City</label><input type="text" class="form-input" placeholder="New York"></div>
+                  <div class="form-group"><label class="form-label">ZIP Code</label><input type="text" class="form-input" placeholder="10001"></div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Country</label>
+                  <select class="form-input">
+                    <option>United States</option>
+                    <option>United Kingdom</option>
+                    <option>Canada</option>
+                    <option>Germany</option>
+                    <option>France</option>
+                    <option>Australia</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Payment -->
+              <div class="checkout-section" data-step="2" style="display:none">
+                <div class="checkout-section-title"><span></span> Payment Method</div>
+                <div class="payment-methods">
+                  <div class="pay-method selected" data-method="card">
+                    <div class="pay-method-icon">💳</div>
+                    <div>Credit Card</div>
+                  </div>
+                  <div class="pay-method" data-method="paypal">
+                    <div class="pay-method-icon">🅿️</div>
+                    <div>PayPal</div>
+                  </div>
+                  <div class="pay-method" data-method="apple">
+                    <div class="pay-method-icon">🍎</div>
+                    <div>Apple Pay</div>
+                  </div>
+                </div>
+                <div id="cardFields">
+                  <div class="form-group"><label class="form-label">Card Number</label><input type="text" class="form-input" placeholder="1234 5678 9012 3456" maxlength="19"></div>
+                  <div class="card-input-row">
+                    <div class="form-group"><label class="form-label">Expiry Date</label><input type="text" class="form-input" placeholder="MM / YY" maxlength="7"></div>
+                    <div class="form-group"><label class="form-label">CVV</label><input type="text" class="form-input" placeholder="•••" maxlength="4"></div>
+                  </div>
+                  <div class="form-group"><label class="form-label">Cardholder Name</label><input type="text" class="form-input" placeholder="John Doe"></div>
+                </div>
+              </div>
+
+              <!-- Review -->
+              <div class="checkout-section" data-step="3" style="display:none">
+                <div class="checkout-section-title"><span></span> Review Your Order</div>
+                <p style="color:var(--text-secondary);font-size:0.88rem;margin-bottom:16px">Please review your order details before placing.</p>
+                <div style="background:var(--bg-elevated);border-radius:var(--radius-md);padding:16px;font-size:0.85rem;color:var(--text-secondary);line-height:1.8">
+                  ✓ Items will ship within 1–2 business days<br>
+                  ✓ Free returns within 30 days<br>
+                  ✓ Payment is fully encrypted and secure
+                </div>
+              </div>
+
+              <button class="btn-primary" id="checkoutNextBtn" style="margin-top:8px;padding:16px 32px">
+                Continue to Payment <span id="checkoutNextLabel"></span>
+              </button>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary-checkout">
+              <div class="summary-title">Order Summary</div>
+              <div id="checkoutOrderItems"></div>
+              <hr class="summary-divider">
+              <div class="summary-row"><span>Subtotal</span><span id="checkoutSubtotal">$0.00</span></div>
+              <div class="summary-row"><span>Shipping</span><span id="checkoutShipping">$0.00</span></div>
+              <div class="summary-row"><span>Tax</span><span id="checkoutTax">$0.00</span></div>
+              <hr class="summary-divider">
+              <div class="summary-total"><span>Total</span><span class="total-price" id="checkoutTotal">$0.00</span></div>
+              <div class="secure-badges" style="margin-top:16px">
+                <span class="secure-badge">🔒 Secure</span>
+                <span class="secure-badge">💳 Encrypted</span>
+                <span class="secure-badge">🛡️ Protected</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       PAGE: STATIC CONTENT (For Footer Links)
+       ============================================================ -->
+  <div id="page-static" class="page">
+    <div style="padding-top: var(--nav-h)">
+      <div class="container" style="padding-top: 40px; padding-bottom: 80px;">
+        <div class="detail-back" onclick="goBack()" style="margin-bottom: 24px;">← Go Back</div>
+        <div class="static-content-box">
+          <div class="static-header">
+            <h1 id="staticTitle" class="static-title">Title</h1>
+            <div class="static-divider"></div>
+          </div>
+          <div id="staticBody" class="static-body">
+            <!-- Content will be injected here via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="data/products.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
