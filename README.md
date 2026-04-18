@@ -1,0 +1,1 @@
+Modern e-commerce website built with HTML, CSS, and JavaScript (frontend only).   Includes product listing, search functionality, category/price/rating filters, shopping cart, wishlist, pagination, and a modern dark mode UI.
